@@ -9,6 +9,7 @@ import { FaEnvelope, FaLock } from "react-icons/fa";
 
 import LogoPrimary from "../../assets/logo-primary.svg";
 import { Input } from "../../components/Form/Input";
+import { useAuth } from "../../contexts/AuthContext";
 
 
 interface LoginData {
@@ -17,6 +18,7 @@ interface LoginData {
 }
 
 export const Login = () => {
+  const { SignIn } = useAuth();
   const [ loading, setLoading ] = useState(false);
 
   const loginSchema = yup.object().shape({
@@ -33,24 +35,41 @@ export const Login = () => {
   });
 
   const handleLogin = (data: LoginData) => {
+    setLoading(true);
+    SignIn(data).then(() => setLoading(false)).catch((err) => {
+      setLoading(false);
+    });
   };
 
   return (
     <Flex
       as="main"
       color="white"
-      padding="10px 15px"
-      h="100vh"
-      bgGradient="linear(to-r, purple.800 65%, white 35%)"
+      padding={["10px 15px", "10px 15px", "0", "0"]}
+      h={ ["auto", "auto", "100vh", "100vh"] }
+      justifyContent="center"
+      bgGradient={[
+        "linear(to-b, purple.800 65%, white 35%)",
+        "linear(to-b, purple.800 65%, white 35%)",
+        "linear(to-r, purple.800 65%, white 35%)",
+        "linear(to-r, purple.800 65%, white 35%)",
+      ]}
       w="100%"
     >
-      <Flex w="100%" flexDirection="row" justifyContent="center" align="center">
-        <Grid w="100%" paddingRight="100px">
-          <Image src={LogoPrimary} alt="doit" boxSize="120px" />
-          <Heading as="h1">O jeito fácil, grátis</Heading>
-          <Text>
+      <Flex 
+        w={["100%", "100%", "90%", "70%"]} 
+        flexDirection={["column", "column", "row", "row"]} 
+        justifyContent="center" 
+        align="center"
+      >
+        <Grid w={["100%", "100%", "50%", "50%"]} paddingRight={["0", "0","100px"]}
+          paddingBottom={["20px", "20px", "0"]}
+        >
+          <Image src={LogoPrimary} alt="doit" boxSize={["120px", "120px", "150px", "150px"]} />
+          <Heading as="h1" mt="4">O jeito fácil, grátis</Heading>
+          <Text w={["auto", "350px"]}>
             flexível e atrativo de gerenciar
-            <b>seus projetos em uma única plataforma</b>
+            <b> seus projetos em uma única plataforma</b>
           </Text>
         </Grid>
         <Grid
@@ -58,7 +77,7 @@ export const Login = () => {
           onSubmit={ handleSubmit(handleLogin) }
           action="post"
           mt="4"
-          w="50%"
+          w={["100%", "80%", "50%","50%"]}
           padding="30px 15px"
           border="3px solid"
           borderColor="gray.100"
