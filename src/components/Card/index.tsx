@@ -2,6 +2,8 @@ import { Box, Center, Flex, Heading, HStack, Progress, Text } from "@chakra-ui/r
 import { FaCheck, FaTrash } from "react-icons/fa";
 
 import { theme } from "../../style/theme";
+import { useTasks } from "../../contexts/TasksContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 
 interface Task {
@@ -17,6 +19,9 @@ interface CardProps {
 
 
 export const Card = ({ task }: CardProps) => {
+  const { deleteTask, updateTask } = useTasks();
+  const { accessToken, user} = useAuth();
+
   return (
     <Box
       cursor="pointer"
@@ -29,7 +34,7 @@ export const Card = ({ task }: CardProps) => {
       borderColor="gray.50"
       boxShadow="base"
       padding="7"
-      w={["350px", "auto"]}
+      w={["80vw", "auto"]}
     >
       <Flex justifyContent="space-between">
         <Heading size="md" as="h1">
@@ -44,6 +49,7 @@ export const Card = ({ task }: CardProps) => {
             borderRadius="5px"
             borderColor="gray.200"
             bg="white"
+            onClick={ () => deleteTask(task.id, accessToken) }
           >
               <FaTrash color={ theme.colors.gray["300"] } />
           </Center>
@@ -53,10 +59,11 @@ export const Card = ({ task }: CardProps) => {
             h="30px"
             borderWidth="1px"
             borderRadius="5px"
-            borderColor="gray.200"
-            bg="white"
+            borderColor={ (task.completed)? "purple.800":"gray.200" }
+            bg={ (task.completed)? "purple.800":"white" }
+            onClick={ () => updateTask(task, user.id, accessToken) }
           >
-              <FaCheck color={ theme.colors.gray["300"] } />
+              <FaCheck color={ (task.completed)? theme.colors.white :theme.colors.gray["300"] } />
           </Center>
         </HStack>
       </Flex>

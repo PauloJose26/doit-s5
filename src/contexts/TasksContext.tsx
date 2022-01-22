@@ -25,6 +25,8 @@ interface TasksContextData {
   tasks: Task[];
   createTask: (data: Omit<Task, "id">, accessToken: string) => Promise<void>;
   loadTasks: (userId: string, accessToken: string) => Promise<void>;
+  deleteTask: (idTask: string, accessToken: string) => Promise<void>;
+  updateTask: (task: Task, userId: string, accessToken: string) => Promise<void>;
 }
 
 const TasksContext = createContext<TasksContextData>({} as TasksContextData);
@@ -57,7 +59,7 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
   }, []);
 
   const createTask = useCallback(async (data: Omit<Task, "id">, accessToken: string) => {
-    api.post("/tasks", data, {
+    await api.post("/tasks", data, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -66,8 +68,34 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
     .catch(err => console.log(err));
   }, []);
 
+  const deleteTask = useCallback(async (idTask: string, accessToken: string) => {
+    await api.delete(`/tasks/${ idTask }`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }).then(() => {
+      setTasks(oldTasks => [...oldTasks.filter(item => item.id !== idTask)]);
+    }).catch(err => console.log(err));
+  }, []);
+
+  const updateTask = useCallback(async (task: Task, userId: string, accessToken: string) => {
+    await api.patch(`/tasks/${ task.id }`, { completed: !task.completed, userId }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }).then(() => {
+      setTasks((oldTasks) => [ ...oldTasks.map(item => {
+        if(item.id === task.id){
+          return { ...item, completed: !task.completed };
+        }
+        return { ...item };
+      }) ]);
+
+    }).catch(err => console.log(err));
+  }, []);
+
   return (
-    <TasksContext.Provider value={{ tasks, createTask, loadTasks }}>
+    <TasksContext.Provider value={{ tasks, createTask, loadTasks, deleteTask, updateTask }}>
       {children}
     </TasksContext.Provider>
   );

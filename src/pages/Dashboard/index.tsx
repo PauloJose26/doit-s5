@@ -15,7 +15,7 @@ export const Dashboard = () => {
 
     useEffect(() => {
         loadTasks(user.id, accessToken).then(res => setLoading(false));
-    });
+    }, []);
 
     return (
         <Box>

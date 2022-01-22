@@ -18,7 +18,7 @@ export const Header = () => {
       paddingY="2"
     >
       <Flex align="center">
-        <Image src={ Logo } />
+        <Image src={ Logo } h="9vh" />
         <Heading ml="4" size="lg">
           Dashboard
         </Heading>

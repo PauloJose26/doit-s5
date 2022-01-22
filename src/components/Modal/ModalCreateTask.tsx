@@ -42,7 +42,8 @@ export const ModalCreateTask = ({ isOpen, onClose }: ModalCreateTaskProps) => {
   const {
     handleSubmit,
     register,
-    formState: { errors }
+    formState: { errors },
+    reset
   } = useForm<TaskData>({
     resolver: yupResolver(yupSchema),
   });
@@ -52,7 +53,10 @@ export const ModalCreateTask = ({ isOpen, onClose }: ModalCreateTaskProps) => {
 
   const handleCreateTask = (data: TaskData) => {
     const newData = { ...data, userId: user.id, completed: false };
-    createTask(newData, accessToken).then(() => onClose());
+    createTask(newData, accessToken).then(() => {
+      onClose();
+      reset();
+    });
   };
 
   return (

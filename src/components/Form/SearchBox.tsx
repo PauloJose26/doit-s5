@@ -14,17 +14,20 @@ export const SearchBox = () => {
     <Flex
       mt="6"
       w="100%"
+      flexDirection={["column", "column", "row"]}
+      justifyContent={["center", "center", "start"]}
+      alignItems="center"
       paddingX={["4", "8"]}
       paddingY="2"
       paddingBottom="6"
       borderBottom="1px"
       borderColor="gray.50"
     >
-      <Flex as="form">
+      <Flex as="form" justifyContent="center">
         <Input
           name="title"
           placeholder="Pesquisar por tarefa"
-          w="35vw"
+          w={["60vw", "60vw", "35vw"]}
           h="60px"
           mr="0"
         />
@@ -46,6 +49,7 @@ export const SearchBox = () => {
         color="white"
         paddingX="16"
         ml="4"
+        w={["90%", "90%", "auto"]}
         h="60px"
         borderRadius="8px"
         onClick={ onOpen }
