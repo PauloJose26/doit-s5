@@ -4,7 +4,6 @@ import {
   Modal,
   ModalBody,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Text,
@@ -43,7 +42,7 @@ export const ModalCreateTask = ({ isOpen, onClose }: ModalCreateTaskProps) => {
   const {
     handleSubmit,
     register,
-    formState: { errors },
+    formState: { errors }
   } = useForm<TaskData>({
     resolver: yupResolver(yupSchema),
   });
@@ -53,8 +52,7 @@ export const ModalCreateTask = ({ isOpen, onClose }: ModalCreateTaskProps) => {
 
   const handleCreateTask = (data: TaskData) => {
     const newData = { ...data, userId: user.id, completed: false };
-
-    createTask(newData, accessToken);
+    createTask(newData, accessToken).then(() => onClose());
   };
 
   return (
