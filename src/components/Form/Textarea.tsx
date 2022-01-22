@@ -2,8 +2,8 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Input as ChakraInput,
-  InputProps as ChakraInputProps,
+  Textarea as ChakraTextarea,
+  TextareaProps as ChakraTextareaProps,
   InputLeftElement,
   InputGroup,
 } from "@chakra-ui/react";
@@ -17,28 +17,28 @@ import {
 import { FieldError } from "react-hook-form";
 import { IconType } from "react-icons";
 
-interface InputProps extends ChakraInputProps {
+interface TextareaProps extends ChakraTextareaProps {
   name: string;
   label?: string;
   error?: FieldError | null;
   icon?: IconType;
 }
 
-type inputVariationProps = {
+type textareaVariationProps = {
   [key: string]: string;
 };
 
-const InputVariation: inputVariationProps = {
+const TextareaVariation: textareaVariationProps = {
   error: "red.600",
   default: "gray.300",
   focus: "purple.800",
   filled: "green.600",
 };
 
-const BaseInput: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
-  { name, label, error = null, icon: Icon, ...rest },
-  ref
-) => {
+const BaseTextarea: ForwardRefRenderFunction<
+  HTMLTextAreaElement,
+  TextareaProps
+> = ({ name, label, error = null, icon: Icon, ...rest }, ref) => {
   const [value, setValue] = useState<string>("");
   const [variation, setVariation] = useState<string>("default");
 
@@ -66,17 +66,17 @@ const BaseInput: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
 
       <InputGroup flexDirection="column">
         {Icon && (
-          <InputLeftElement color={InputVariation[variation]} mt="5px">
+          <InputLeftElement color={TextareaVariation[variation]} mt="5px">
             <Icon />
           </InputLeftElement>
         )}
 
-        <ChakraInput
+        <ChakraTextarea
           name={name}
           bg="gray.50"
           variant="outline"
-          color={InputVariation[variation]}
-          borderColor={InputVariation[variation]}
+          color={TextareaVariation[variation]}
+          borderColor={TextareaVariation[variation]}
           _hover={{ bgColor: "gray.100" }}
           _placeholder={{ color: "gray.300" }}
           _focus={{
@@ -97,4 +97,4 @@ const BaseInput: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
   );
 };
 
-export const Input = forwardRef(BaseInput);
+export const Textarea = forwardRef(BaseTextarea);
