@@ -59,7 +59,7 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-
+      
       setTasks([...response.data]);
     } catch (err) {
       console.log(err);

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { Box, Grid, useDisclosure } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 
-import { Card } from "../../components/Card";
-import { SearchBox } from "../../components/Form/SearchBox";
-import { Header } from "../../components/Header";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTasks } from "../../contexts/TasksContext";
 import { ModalTaskDetail } from "../../components/Modal/ModalTaskDetail";
+import { TasksList } from "./TasksList";
+import { FirstTask } from "./FirstTask";
+import { NotFound } from "./NotFound";
 
 interface Task {
   id: string;
@@ -19,9 +19,9 @@ interface Task {
 export const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const { accessToken, user } = useAuth();
-  const { tasks, loadTasks } = useTasks();
+  const { tasks, loadTasks, notFound, taskNotFound } = useTasks();
 
-  const [ selectedTask, setSelectedTask ] = useState<Task>({} as Task);
+  const [selectedTask, setSelectedTask] = useState<Task>({} as Task);
 
   const {
     isOpen: isTaskDetailOpen,
@@ -38,24 +38,29 @@ export const Dashboard = () => {
     loadTasks(user.id, accessToken).then((res) => setLoading(false));
   }, []);
 
+  if (notFound) {
+    return (
+      <NotFound
+        isOpen={isTaskDetailOpen}
+        onClose={onTaskDetailClose}
+        task={selectedTask}
+        taskNotFound={taskNotFound}
+      />
+    );
+  }
+
   return (
     <>
-      <ModalTaskDetail isOpen={isTaskDetailOpen} onClose={onTaskDetailClose} task={ selectedTask } />
-      <Box>
-        <Header />
-        <SearchBox />
-        <Grid
-          w="100%"
-          templateColumns="repeat(auto-fill, minmax(420px, 1fr))"
-          gap={7}
-          padding="8"
-          mt="8"
-        >
-          {tasks.map((item) => (
-            <Card key={item.id} task={item} onClick={ handleClick } />
-          ))}
-        </Grid>
-      </Box>
+      <ModalTaskDetail
+        isOpen={isTaskDetailOpen}
+        onClose={onTaskDetailClose}
+        task={selectedTask}
+      />
+      {!loading && !tasks.length ? (
+        <FirstTask />
+      ) : (
+        <TasksList handleClick={handleClick} loading={loading} tasks={tasks} />
+      )}
     </>
   );
 };
