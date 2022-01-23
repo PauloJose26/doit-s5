@@ -65,9 +65,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }, []);
 
     const SignOut = useCallback(() => {
-        console.log("Entrei");
-        localStorage.removeItem("@Doit:accessToken");
-        localStorage.removeItem("@Doit:user");
+        localStorage.clear();
+        localStorage.clear();
 
         setData({} as AuthState);
     }, []);

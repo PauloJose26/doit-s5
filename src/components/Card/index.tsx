@@ -1,10 +1,17 @@
-import { Box, Center, Flex, Heading, HStack, Progress, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Flex,
+  Heading,
+  HStack,
+  Progress,
+  Text,
+} from "@chakra-ui/react";
 import { FaCheck, FaTrash } from "react-icons/fa";
 
 import { theme } from "../../style/theme";
 import { useTasks } from "../../contexts/TasksContext";
 import { useAuth } from "../../contexts/AuthContext";
-
 
 interface Task {
   id: string;
@@ -15,12 +22,12 @@ interface Task {
 }
 interface CardProps {
   task: Task;
+  onClick: (task: Task) => void;
 }
 
-
-export const Card = ({ task }: CardProps) => {
+export const Card = ({ task, onClick }: CardProps) => {
   const { deleteTask, updateTask } = useTasks();
-  const { accessToken, user} = useAuth();
+  const { accessToken, user } = useAuth();
 
   return (
     <Box
@@ -38,7 +45,7 @@ export const Card = ({ task }: CardProps) => {
     >
       <Flex justifyContent="space-between">
         <Heading size="md" as="h1">
-          { task.title }
+          {task.title}
         </Heading>
         <HStack spacing="4">
           <Center
@@ -49,9 +56,9 @@ export const Card = ({ task }: CardProps) => {
             borderRadius="5px"
             borderColor="gray.200"
             bg="white"
-            onClick={ () => deleteTask(task.id, accessToken) }
+            onClick={() => deleteTask(task.id, accessToken)}
           >
-              <FaTrash color={ theme.colors.gray["300"] } />
+            <FaTrash color={theme.colors.gray["300"]} />
           </Center>
           <Center
             as="button"
@@ -59,20 +66,28 @@ export const Card = ({ task }: CardProps) => {
             h="30px"
             borderWidth="1px"
             borderRadius="5px"
-            borderColor={ (task.completed)? "purple.800":"gray.200" }
-            bg={ (task.completed)? "purple.800":"white" }
-            onClick={ () => updateTask(task, user.id, accessToken) }
+            borderColor={task.completed ? "purple.800" : "gray.200"}
+            bg={task.completed ? "purple.800" : "white"}
+            onClick={() => updateTask(task, user.id, accessToken)}
           >
-              <FaCheck color={ (task.completed)? theme.colors.white :theme.colors.gray["300"] } />
+            <FaCheck
+              color={
+                task.completed ? theme.colors.white : theme.colors.gray["300"]
+              }
+            />
           </Center>
         </HStack>
       </Flex>
-      <Box w="100%" mt="4">
-          <Text>{ task.description }</Text>
-          <Progress colorScheme="purple" mt="2.4" value={ (task.completed)? 100: 10 } />
-          <Text color="gray.300" mt="3">
-            07 March 2021
-          </Text>
+      <Box w="100%" mt="4" onClick={() => onClick(task)}>
+        <Text>{task.description}</Text>
+        <Progress
+          colorScheme="purple"
+          mt="2.4"
+          value={task.completed ? 100 : 10}
+        />
+        <Text color="gray.300" mt="3">
+          07 March 2021
+        </Text>
       </Box>
     </Box>
   );
